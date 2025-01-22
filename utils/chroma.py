@@ -37,7 +37,7 @@ class ChromaDBUtil:
 
     def add_to_collection(self, id, text, metadata=None):
         """
-        Adds text and its embedding to the ChromaDB collection.
+        Adds or updates text and its embedding in the ChromaDB collection.
 
         Args:
             id (str): Unique ID for the text.
@@ -46,7 +46,23 @@ class ChromaDBUtil:
         """
         if metadata is None:
             metadata = {}
-        self.collection.add(ids=[id], documents=[text], metadatas=[metadata])
+            
+        # Check if ID already exists
+        existing_ids = self.collection.get()['ids']
+        if id in existing_ids:
+            # Update existing entry
+            self.collection.update(
+                ids=[id],
+                documents=[text],
+                metadatas=[metadata]
+            )
+        else:
+            # Add new entry
+            self.collection.add(
+                ids=[id],
+                documents=[text],
+                metadatas=[metadata]
+            )
 
     def query_similar(self, query_text, top_k=5):
         """

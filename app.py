@@ -1,9 +1,13 @@
 from utils.genai import chat_stream
 import streamlit as st
 import os
-from main import get_enhanced_prompt
+from main import get_enhanced_prompt, embed_tweets
 
 # Page config and styling
+if 'initialized' not in st.session_state:
+    st.session_state.initialized = True
+    embed_tweets()
+
 st.set_page_config(
     page_title="X Wisdom",
     page_icon="X",
